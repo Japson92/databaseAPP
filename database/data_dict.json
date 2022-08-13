@@ -3,5 +3,15 @@
         "amount": "3",
         "cat_nr": "dsad",
         "company_name": "asdasd"
+    },
+    "wiertarka": {
+        "amount": "4",
+        "cat_nr": "1234",
+        "company_name": "makita "
+    },
+    "wkretarka": {
+        "amount": "6",
+        "cat_nr": "324235",
+        "company_name": "jcb"
     }
 }
