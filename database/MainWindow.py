@@ -23,34 +23,34 @@ class MainWindow():
         with open(fileName, "w", encoding="UTF-8") as file:
             json.dump(self.data_dict, file, ensure_ascii=False, indent=4, sort_keys=True)
 
-    def load_json_file(self):
-        with open("data_dict.json", encoding="UTF-8") as file:
+    def load_json_file(self, fileName):
+        with open(fileName, encoding="UTF-8") as file:
             self.data_dict = json.load(file)
             for key in self.data_dict:
                 self.data_list.append(key)
                 self.combo_data["values"] = self.data_list
 
     def add_data(self):
-        data = self.etb0.get()
-        data2 = self.etb1.get()
-        data3 = self.etb2.get()
-        data4 = self.etb3.get()
-        if data or data2 or data3 or data4:
-            self.data_list.append(data)
-            self.data_dict.update({data: {"company_name": data2, "cat_nr": data3, "amount": data4}})
+        cat_nr = self.etb0.get()
+        company_name = self.etb1.get()
+        tool_type = self.etb2.get()
+        amount = self.etb3.get()
+        if cat_nr or company_name or tool_type or amount:
+            self.data_list.append(cat_nr)
+            self.data_dict.update({cat_nr: {"company_name": company_name, "tool_type": tool_type, "amount": amount}})
             self.combo_data["values"] = self.data_list
-            self.etb0.delete(first=0, last=len(data))
-            self.etb1.delete(first=0, last=len(data2))
-            self.etb2.delete(first=0, last=len(data3))
-            self.etb3.delete(first=0, last=len(data4))
+            self.etb0.delete(first=0, last=len(cat_nr))
+            self.etb1.delete(first=0, last=len(company_name))
+            self.etb2.delete(first=0, last=len(tool_type))
+            self.etb3.delete(first=0, last=len(amount))
             self.save_json_file("data_dict.json")
 
     def change_label(self):
         picked_tool = self.combo_data.get()
         dictionary = self.data_dict[picked_tool]
-        self.labelka.configure(text="Tool type: " + picked_tool + ", company name: " +
-                                    dictionary["company_name"] + ", catalog number: " +
-                                    dictionary["cat_nr"] + ", amount: " + dictionary["amount"])
+        self.labelka.configure(text="Catalog number: " + picked_tool + ", company name: " +
+                                    dictionary["company_name"] + ", tool type: " +
+                                    dictionary["tool_type"] + ", amount: " + dictionary["amount"])
 
     def release_tool(self):
         picked_tool = self.combo_data.get()
@@ -61,9 +61,9 @@ class MainWindow():
             mBox.showwarning("Warning", "Low amount of tool!")
         dictionary["amount"] = str(new_amount)
 
-        self.labelka.configure(text="Tool type: " + picked_tool + ", company name: " +
-                                    dictionary["company_name"] + ", catalog number: " +
-                                    dictionary["cat_nr"] + ", amount: " + dictionary["amount"])
+        self.labelka.configure(text="Catalog number: " + picked_tool + ", company name: " +
+                                    dictionary["company_name"] + ", tool type: " +
+                                    dictionary["tool_type"] + ", amount: " + dictionary["amount"])
 
         self.save_json_file("data_dict.json")
 
@@ -86,10 +86,10 @@ class MainWindow():
         self.monty.grid(column=0, row=0, padx=8, pady=4)
 
         self.monty2 = ttk.LabelFrame(tab2, text=' Main 1 ')
-        self.monty.grid(column=0, row=0, padx=8, pady=4)
+        self.monty2.grid(column=0, row=0, padx=8, pady=4)
 
         self.monty3 = ttk.LabelFrame(tab3, text=' Main 1 ')
-        self.monty.grid(column=0, row=0, padx=8, pady=4)
+        self.monty3.grid(column=0, row=0, padx=8, pady=4)
 
         # Creating a Menu Bar
         menu_bar = tk.Menu(tab1)
@@ -117,16 +117,16 @@ class MainWindow():
         self.etb3.delete(first=0, last=1)
         self.etb3.grid(column=3, row=4)
 
-        self.etb0.focus()
+        self.etb2.focus()
 
     def create_labels(self):
-        label = ttk.Label(self.monty, text="Choose a Tool Type:")
+        label = ttk.Label(self.monty2, text="Choose a Tool Type:")
         label.grid(column=1, row=0)
-        label1 = ttk.Label(self.monty, text="Tool Type")
+        label1 = ttk.Label(self.monty, text="Cat Nr")
         label1.grid(column=0, row=3)
         label2 = ttk.Label(self.monty, text="Company Name")
         label2.grid(column=1, row=3)
-        label3 = ttk.Label(self.monty, text="Cat Nr")
+        label3 = ttk.Label(self.monty, text="Tool Type")
         label3.grid(column=2, row=3)
         label4 = ttk.Label(self.monty, text="Amount")
         label4.grid(column=3, row=3)
@@ -137,8 +137,11 @@ class MainWindow():
     def create_combo_box(self):
         self.data_list = []
         self.data_dict = {}
-        self.combo_data = ttk.Combobox(self.monty, width=30)
+        self.combo_data = ttk.Combobox(self.monty, width=12)
         self.combo_data.grid(column=1, row=1)
+
+        self.combo_data2 = ttk.Combobox(self.monty2, width=12)
+        self.combo_data2.grid(column=1, row=4)
 
     def create_buttons(self):
         self.bt1 = ttk.Button(
