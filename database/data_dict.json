@@ -1,7 +1,22 @@
 {
+    "123": {
+        "amount": "12",
+        "company_name": "wmt",
+        "tool_type": "drill"
+    },
     "123124": {
-        "amount": "8",
+        "amount": "4",
         "company_name": "jcb",
         "tool_type": "drill "
+    },
+    "1232": {
+        "amount": "9",
+        "company_name": "jcb",
+        "tool_type": "wkret"
+    },
+    "1234": {
+        "amount": "1",
+        "company_name": "qwe",
+        "tool_type": "wkret"
     }
 }
