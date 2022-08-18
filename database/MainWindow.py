@@ -49,7 +49,11 @@ class MainWindow:
         for i in range(len(elements_list)):
             input_list.append(elements_list[i].get())
 
-        if input_list[0] and input_list[1] and input_list[2] and input_list[3]:
+        newList = set(self.data_dict)
+        if input_list[0] in newList:
+            mBox.showerror("Error!", "Tool already exist!")
+
+        elif input_list[0] and input_list[1] and input_list[2] and input_list[3]:
             self.data_list.append(input_list[0])
             self.data_dict.update({input_list[0]: {"company_name": input_list[1], "tool_type": input_list[2],
                                                    "amount": input_list[3]}})

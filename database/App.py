@@ -7,6 +7,7 @@ button_column = [2, 1, 3]
 button_text = ["Add Tool", "Add Company", "Add Tool Type"]
 button_row = [2, 6, 6]
 button_methods = [startApp.add_new_tool, startApp.add_new_company, startApp.add_new_tool_type]
+
 for labels in range(4):
     startApp.create_labels(labels, 0, text[labels])
 
