@@ -14,12 +14,11 @@ class MainWindow:
         self.win = tk.Tk()
         self.win.title("Tools Database")
         self.create_window()
-        self.create_text_boxes()
-        self.create_combo_box()
         self.data_list = []
         self.data_dict = {}
         self.company_list = []
         self.tool_type_list = []
+        self.tree_list = []
 
     def _quit(self):
         self.win.quit()
@@ -43,31 +42,36 @@ class MainWindow:
             self.tool_type_list = json.load(file)
             self.combo_data3["values"] = self.tool_type_list
 
+    def load_json_tree_list(self, fileName):
+        with open(fileName, encoding="UTF-8") as file:
+            self.tree_list = json.load(file)
+
     def add_new_tool(self):
         input_list = []
-        elements_list = [self.etb0, self.combo_data2, self.combo_data3, self.etb3]
+        elements_list = [self.etb0, self.combo_data2, self.combo_data3, self.etb3, self.etb4, self.etb5]
         for i in range(len(elements_list)):
             input_list.append(elements_list[i].get())
 
-        newList = set(self.data_dict)
-        if input_list[0] in newList:
+        if input_list[0] in self.data_dict:
             mBox.showerror("Error!", "Tool already exist!")
 
-        elif input_list[0] and input_list[1] and input_list[2] and input_list[3]:
+        elif input_list[0] and input_list[1] and input_list[2] and input_list[3] and input_list[4] and input_list[5]:
             self.data_list.append(input_list[0])
+            self.tree_list.append((input_list[0], input_list[1], input_list[2], input_list[3], input_list[4], input_list[5]))
             self.data_dict.update({input_list[0]: {"company_name": input_list[1], "tool_type": input_list[2],
-                                                   "amount": input_list[3]}})
+                                                   "amount": input_list[3], "rack_nr": input_list[4],
+                                                   "drawer_nr": input_list[5]}})
             self.combo_data["values"] = self.data_list
-            for element in range(4):
+            for element in range(6):
                 elements_list[element].delete(first=0, last=(len(input_list[element])))
-
+            save_json_file("tree_list.json", self.tree_list)
+            self.load_json_tree_list("tree_list.json")
             save_json_file("data_dict.json", self.data_dict)
 
     def add_new_company(self):
         company = self.etb1.get()
         if company:
             self.company_list.append(company)
-            print("dodano")
             self.combo_data2["values"] = self.company_list
             self.etb1.delete(first=0, last=len(company))
             save_json_file("company_list.json", self.company_list)
@@ -80,12 +84,15 @@ class MainWindow:
             self.etb2.delete(first=0, last=len(tool_type))
             save_json_file("tool_type_list.json", self.tool_type_list)
 
-    def change_label(self):
+    def search_tool(self):
         picked_tool = self.combo_data.get()
         dictionary = self.data_dict[picked_tool]
         self.labelka.configure(text="Catalog number: " + picked_tool + ", company name: " +
                                     dictionary["company_name"] + ", tool type: " +
-                                    dictionary["tool_type"] + ", amount: " + dictionary["amount"])
+                                    dictionary["tool_type"])
+        self.labelka2.configure(text="amount: " + dictionary["amount"] + ", rack number: " +
+                                     dictionary["rack_nr"] + ", drawer number: " +
+                                     dictionary["drawer_nr"])
 
     def release_tool(self):
         picked_tool = self.combo_data.get()
@@ -97,9 +104,9 @@ class MainWindow:
 
         dictionary["amount"] = str(new_amount)
 
-        self.labelka.configure(text="Catalog number: " + picked_tool + ", company name: " +
-                                    dictionary["company_name"] + ", tool type: " +
-                                    dictionary["tool_type"] + ", amount: " + dictionary["amount"])
+        self.labelka2.configure(text="amount: " + dictionary["amount"] + ", rack number: " +
+                                     dictionary["rack_nr"] + ", drawer number: " +
+                                     dictionary["drawer_nr"])
 
         save_json_file("data_dict.json", self.data_dict)
         mBox.showinfo("Success!", "Tool release done")
@@ -127,6 +134,7 @@ class MainWindow:
         self.monty3 = ttk.LabelFrame(tab3, text=' Add new Tool type ')
         self.monty3.grid(column=0, row=2, padx=8, pady=4, sticky="W")
 
+
         # Creating a Menu Bar
         menu_bar = tk.Menu(tab1)
         self.win.config(menu=menu_bar)
@@ -137,6 +145,20 @@ class MainWindow:
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self._quit)
         menu_bar.add_cascade(label="File", menu=file_menu)
+
+    def tree(self):
+        columns = ["Cat Nr", "Company", "Tool Type", "Amount", "Rack Nr", "Drawer NR"]
+        drzewko = ttk.Treeview(self.monty2, columns=columns, show="headings", selectmode="browse", height=5)
+        drzewko.grid(column=0, row=3)
+        for column in range(6):
+            drzewko.heading(columns[column], text=columns[column])
+            drzewko.column(column, option=None, width=70)
+        for tree in self.tree_list:
+            drzewko.insert("", tk.END, values=tree)
+
+        scrollbar = ttk.Scrollbar(self.monty2, orient=tk.VERTICAL, command=drzewko.yview)
+        drzewko.configure(yscroll=scrollbar.set)
+        scrollbar.grid(row=3, column=1, sticky='wns')
 
     def create_text_boxes(self):
         self.etb0 = ttk.Entry(self.monty, width=12)
@@ -153,6 +175,12 @@ class MainWindow:
         self.etb3.delete(first=0, last=1)
         self.etb3.grid(column=3, row=1)
 
+        self.etb4 = ttk.Entry(self.monty, width=12)
+        self.etb4.grid(column=0, row=3)
+
+        self.etb5 = ttk.Entry(self.monty, width=12)
+        self.etb5.grid(column=1, row=3)
+
         self.etb0.focus()
 
     def create_labels(self, column, row, text):
@@ -160,11 +188,14 @@ class MainWindow:
         label.grid(column=column, row=row)
 
         self.labelka = ttk.Label(self.monty2, text="")
-        self.labelka.grid(column=0, row=6, columnspan=4)
+        self.labelka.grid(column=0, row=5, columnspan=4)
+
+        self.labelka2 = ttk.Label(self.monty2, text="")
+        self.labelka2.grid(column=0, row=6, columnspan=4)
 
     def create_combo_box(self):
         self.combo_data = ttk.Combobox(self.monty2, width=12)
-        self.combo_data.grid(column=1, row=1)
+        self.combo_data.grid(column=0, row=0)
 
         self.combo_data2 = ttk.Combobox(self.monty, width=12)
         self.combo_data2.grid(column=1, row=1)
@@ -176,8 +207,8 @@ class MainWindow:
         bt1 = ttk.Button(self.monty, text=buttonText, command=buttonCommand)
         bt1.grid(column=column, row=row)
 
-        bt2 = ttk.Button(self.monty2, text="Change label!", command=self.change_label)
-        bt2.grid(column=2, row=5)
+        bt2 = ttk.Button(self.monty2, text="Search Tool!", command=self.search_tool)
+        bt2.grid(column=0, row=4)
 
         bt3 = ttk.Button(self.monty2, text="Release!", command=self.release_tool)
-        bt3.grid(column=3, row=5)
+        bt3.grid(column=1, row=4)

@@ -1,42 +1,44 @@
 {
     "123": {
         "amount": "123",
-        "company_name": "123",
+        "company_name": "213",
+        "drawer_nr": "13",
+        "rack_nr": "213",
         "tool_type": "123"
     },
-    "123124": {
-        "amount": "4",
-        "company_name": "jcb",
-        "tool_type": "drill "
+    "55": {
+        "amount": "55",
+        "company_name": "55",
+        "drawer_nr": "55",
+        "rack_nr": "55",
+        "tool_type": "55"
     },
-    "1234": {
-        "amount": "4",
+    "asdfg": {
+        "amount": "5",
         "company_name": "wmt",
-        "tool_type": "wkret"
+        "drawer_nr": "12",
+        "rack_nr": "12",
+        "tool_type": "1234"
     },
-    "1234456": {
-        "amount": "",
-        "company_name": "",
-        "tool_type": ""
+    "lkj": {
+        "amount": "5",
+        "company_name": "lkj",
+        "drawer_nr": "12",
+        "rack_nr": "12",
+        "tool_type": "lkj"
     },
-    "12345": {
-        "amount": "",
-        "company_name": "",
-        "tool_type": ""
+    "mn": {
+        "amount": "mn",
+        "company_name": "mn",
+        "drawer_nr": "mn",
+        "rack_nr": "mn",
+        "tool_type": "mn"
     },
-    "asd": {
-        "amount": "asd",
-        "company_name": "asd",
-        "tool_type": "asd"
-    },
-    "mnb": {
-        "amount": "mnb",
-        "company_name": "mnb",
-        "tool_type": "mnb"
-    },
-    "xzcv": {
-        "amount": "zxcvz",
-        "company_name": "zxcv",
-        "tool_type": "zxcv"
+    "zxc": {
+        "amount": "zxc",
+        "company_name": "zxc",
+        "drawer_nr": "zxc",
+        "rack_nr": "zxc",
+        "tool_type": "zxc"
     }
 }
