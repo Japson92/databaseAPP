@@ -13,15 +13,22 @@
         "rack_nr": "55",
         "tool_type": "55"
     },
+    "768": {
+        "amount": "670",
+        "company_name": "678",
+        "drawer_nr": "678",
+        "rack_nr": "678",
+        "tool_type": "678"
+    },
     "asdfg": {
-        "amount": "5",
+        "amount": "3",
         "company_name": "wmt",
         "drawer_nr": "12",
         "rack_nr": "12",
         "tool_type": "1234"
     },
     "lkj": {
-        "amount": "5",
+        "amount": "0",
         "company_name": "lkj",
         "drawer_nr": "12",
         "rack_nr": "12",

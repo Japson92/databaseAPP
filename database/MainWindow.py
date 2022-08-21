@@ -65,7 +65,8 @@ class MainWindow:
             for element in range(6):
                 elements_list[element].delete(first=0, last=(len(input_list[element])))
             save_json_file("tree_list.json", self.tree_list)
-            self.load_json_tree_list("tree_list.json")
+            self.drzewko.insert("", tk.END, values=(input_list[0], input_list[1], input_list[2], input_list[3],
+                                                    input_list[4], input_list[5]))
             save_json_file("data_dict.json", self.data_dict)
 
     def add_new_company(self):
@@ -94,22 +95,49 @@ class MainWindow:
                                      dictionary["rack_nr"] + ", drawer number: " +
                                      dictionary["drawer_nr"])
 
+    def search_tree(self):
+        picked_tool = self.combo_data.get()
+        for row in self.drzewko.get_children():
+            self.drzewko.delete(row)
+        for record in self.tree_list:
+            if record[0] == picked_tool:
+                self.drzewko.insert("", tk.END, values=record)
+
     def release_tool(self):
         picked_tool = self.combo_data.get()
         dictionary = self.data_dict[picked_tool]
         new_amount = int(dictionary["amount"]) - 1
 
-        if new_amount < 5:
-            mBox.showwarning("Warning", "Low amount of tool!")
+        selected = self.drzewko.focus()
+        if selected == "":
+            mBox.showerror("Error", "You have to pick a row")
+        else:
 
-        dictionary["amount"] = str(new_amount)
+            if new_amount < 5:
+                mBox.showwarning("Warning", "Low amount of tool!")
 
-        self.labelka2.configure(text="amount: " + dictionary["amount"] + ", rack number: " +
-                                     dictionary["rack_nr"] + ", drawer number: " +
-                                     dictionary["drawer_nr"])
+            dictionary["amount"] = str(new_amount)
 
-        save_json_file("data_dict.json", self.data_dict)
-        mBox.showinfo("Success!", "Tool release done")
+            self.labelka.configure(text="Catalog number: " + picked_tool + ", company name: " +
+                                        dictionary["company_name"] + ", tool type: " +
+                                        dictionary["tool_type"])
+            self.labelka2.configure(text="amount: " + dictionary["amount"] + ", rack number: " +
+                                         dictionary["rack_nr"] + ", drawer number: " +
+                                         dictionary["drawer_nr"])
+            for record in self.tree_list:
+                if record[0] == picked_tool:
+                    record[3] = str(new_amount)
+                    print(record[3])
+                    selected = self.drzewko.focus()
+                    temp = self.drzewko.item(selected, "values")
+                    self.drzewko.item(selected, values=(temp[0],temp[1],temp[2],record[3],temp[4], temp[5]))
+            save_json_file("data_dict.json", self.data_dict)
+            save_json_file("tree_list.json", self.tree_list)
+            for row in self.drzewko.get_children():
+                self.drzewko.delete(row)
+            for tree in self.tree_list:
+                self.drzewko.insert("", tk.END, values=tree)
+            mBox.showinfo("Success!", "Tool release done")
 
     def create_window(self):
         # Tab Control introduced here --------------------------------------
@@ -146,18 +174,18 @@ class MainWindow:
         file_menu.add_command(label="Exit", command=self._quit)
         menu_bar.add_cascade(label="File", menu=file_menu)
 
-    def tree(self):
+    def create_tree(self):
         columns = ["Cat Nr", "Company", "Tool Type", "Amount", "Rack Nr", "Drawer NR"]
-        drzewko = ttk.Treeview(self.monty2, columns=columns, show="headings", selectmode="browse", height=5)
-        drzewko.grid(column=0, row=3)
+        self.drzewko = ttk.Treeview(self.monty2, columns=columns, show="headings", selectmode="browse", height=5)
+        self.drzewko.grid(column=0, row=3)
         for column in range(6):
-            drzewko.heading(columns[column], text=columns[column])
-            drzewko.column(column, option=None, width=70)
+            self.drzewko.heading(columns[column], text=columns[column])
+            self.drzewko.column(column, option=None, width=70)
         for tree in self.tree_list:
-            drzewko.insert("", tk.END, values=tree)
+            self.drzewko.insert("", tk.END, values=tree)
 
-        scrollbar = ttk.Scrollbar(self.monty2, orient=tk.VERTICAL, command=drzewko.yview)
-        drzewko.configure(yscroll=scrollbar.set)
+        scrollbar = ttk.Scrollbar(self.monty2, orient=tk.VERTICAL, command=self.drzewko.yview)
+        self.drzewko.configure(yscrollcommand=scrollbar.set)
         scrollbar.grid(row=3, column=1, sticky='wns')
 
     def create_text_boxes(self):
@@ -207,7 +235,7 @@ class MainWindow:
         bt1 = ttk.Button(self.monty, text=buttonText, command=buttonCommand)
         bt1.grid(column=column, row=row)
 
-        bt2 = ttk.Button(self.monty2, text="Search Tool!", command=self.search_tool)
+        bt2 = ttk.Button(self.monty2, text="Search Tool!", command=self.search_tree)
         bt2.grid(column=0, row=4)
 
         bt3 = ttk.Button(self.monty2, text="Release!", command=self.release_tool)

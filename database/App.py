@@ -26,6 +26,6 @@ startApp.load_json_file_dict("data_dict.json")
 startApp.load_json_company_file("company_list.json")
 startApp.load_json_tools_file("tool_type_list.json")
 startApp.load_json_tree_list("tree_list.json")
-startApp.tree()
+startApp.create_tree()
 
 startApp.win.mainloop()
