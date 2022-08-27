@@ -57,7 +57,8 @@ class MainWindow:
 
         elif input_list[0] and input_list[1] and input_list[2] and input_list[3] and input_list[4] and input_list[5]:
             self.data_list.append(input_list[0])
-            self.tree_list.append((input_list[0], input_list[1], input_list[2], input_list[3], input_list[4], input_list[5]))
+            self.tree_list.append((input_list[0], input_list[1], input_list[2], input_list[3],
+                                   input_list[4], input_list[5]))
             self.data_dict.update({input_list[0]: {"company_name": input_list[1], "tool_type": input_list[2],
                                                    "amount": input_list[3], "rack_nr": input_list[4],
                                                    "drawer_nr": input_list[5]}})
@@ -68,6 +69,18 @@ class MainWindow:
             self.drzewko.insert("", tk.END, values=(input_list[0], input_list[1], input_list[2], input_list[3],
                                                     input_list[4], input_list[5]))
             save_json_file("data_dict.json", self.data_dict)
+
+    def get_random_data(self):
+        for i in range(4000):
+            self.data_list.append("123456{}".format(i))
+            self.tree_list.append(("123456{}".format(i), "jcb", "drill", 100,
+                                   i, i))
+            self.data_dict.update({"123456{}".format(i): {"company_name": "jcb", "tool_type": "drill",
+                                                          "amount": 100, "rack_nr": i,
+                                                          "drawer_nr": i}})
+        save_json_file("tree_list.json", self.tree_list)
+        save_json_file("data_dict.json", self.data_dict)
+
 
     def add_new_company(self):
         company = self.etb1.get()
@@ -85,16 +98,6 @@ class MainWindow:
             self.etb2.delete(first=0, last=len(tool_type))
             save_json_file("tool_type_list.json", self.tool_type_list)
 
-    def search_tool(self):
-        picked_tool = self.combo_data.get()
-        dictionary = self.data_dict[picked_tool]
-        self.labelka.configure(text="Catalog number: " + picked_tool + ", company name: " +
-                                    dictionary["company_name"] + ", tool type: " +
-                                    dictionary["tool_type"])
-        self.labelka2.configure(text="amount: " + dictionary["amount"] + ", rack number: " +
-                                     dictionary["rack_nr"] + ", drawer number: " +
-                                     dictionary["drawer_nr"])
-
     def search_tree(self):
         picked_tool = self.combo_data.get()
         for row in self.drzewko.get_children():
@@ -107,30 +110,22 @@ class MainWindow:
         picked_tool = self.combo_data.get()
         dictionary = self.data_dict[picked_tool]
         new_amount = int(dictionary["amount"]) - 1
-
         selected = self.drzewko.focus()
+
         if selected == "":
             mBox.showerror("Error", "You have to pick a row")
         else:
-
             if new_amount < 5:
                 mBox.showwarning("Warning", "Low amount of tool!")
 
             dictionary["amount"] = str(new_amount)
 
-            self.labelka.configure(text="Catalog number: " + picked_tool + ", company name: " +
-                                        dictionary["company_name"] + ", tool type: " +
-                                        dictionary["tool_type"])
-            self.labelka2.configure(text="amount: " + dictionary["amount"] + ", rack number: " +
-                                         dictionary["rack_nr"] + ", drawer number: " +
-                                         dictionary["drawer_nr"])
             for record in self.tree_list:
                 if record[0] == picked_tool:
                     record[3] = str(new_amount)
-                    print(record[3])
                     selected = self.drzewko.focus()
                     temp = self.drzewko.item(selected, "values")
-                    self.drzewko.item(selected, values=(temp[0],temp[1],temp[2],record[3],temp[4], temp[5]))
+                    self.drzewko.item(selected, values=(temp[0], temp[1], temp[2], record[3], temp[4], temp[5]))
             save_json_file("data_dict.json", self.data_dict)
             save_json_file("tree_list.json", self.tree_list)
             for row in self.drzewko.get_children():
@@ -156,12 +151,11 @@ class MainWindow:
         self.monty = ttk.LabelFrame(tab1, text=' Add new tools ')
         self.monty.grid(column=0, row=0, padx=8, pady=4)
 
-        self.monty2 = ttk.LabelFrame(tab2, text=' Add new Company ')
+        self.monty2 = ttk.LabelFrame(tab2, text=' Searching tools ')
         self.monty2.grid(column=0, row=1, padx=8, pady=4, sticky="W")
 
         self.monty3 = ttk.LabelFrame(tab3, text=' Add new Tool type ')
         self.monty3.grid(column=0, row=2, padx=8, pady=4, sticky="W")
-
 
         # Creating a Menu Bar
         menu_bar = tk.Menu(tab1)
@@ -215,15 +209,12 @@ class MainWindow:
         label = ttk.Label(self.monty, text=text)
         label.grid(column=column, row=row)
 
-        self.labelka = ttk.Label(self.monty2, text="")
-        self.labelka.grid(column=0, row=5, columnspan=4)
-
-        self.labelka2 = ttk.Label(self.monty2, text="")
-        self.labelka2.grid(column=0, row=6, columnspan=4)
+        label1 = ttk.Label(self.monty2, text="Catalog number list")
+        label1.grid(column=0, row=0)
 
     def create_combo_box(self):
         self.combo_data = ttk.Combobox(self.monty2, width=12)
-        self.combo_data.grid(column=0, row=0)
+        self.combo_data.grid(column=0, row=1)
 
         self.combo_data2 = ttk.Combobox(self.monty, width=12)
         self.combo_data2.grid(column=1, row=1)
