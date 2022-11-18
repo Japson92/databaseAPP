@@ -1,5 +1,6 @@
 import MainWindow
 
+
 startApp = MainWindow.MainWindow()
 text = ["Cat Nr", "Company Name", "Tool Type", "Amount", "Rack Nr", "Drawer NR"]
 text2 = ["New Company", "", "New Tool Type"]

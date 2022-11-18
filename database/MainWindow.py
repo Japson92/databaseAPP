@@ -142,7 +142,7 @@ class MainWindow:
         tab_control.add(tab1, text='Add Tool')      # Add the tab
 
         tab2 = ttk.Frame(tab_control)            # Add a second tab
-        tab_control.add(tab2, text='Tab 2')      # Make second tab visible
+        tab_control.add(tab2, text='Tool list')      # Make second tab visible
 
         tab3 = ttk.Frame(tab_control)
         tab_control.add(tab3, text='Tab 3')
